@@ -11,6 +11,7 @@ class UCameraComponent;
 class USoundComponent;
 class UAnimationComponent;
 class UTheProjectile;
+class UHealthComponent;
 
 UCLASS()
 class MYFINALPROJECT_API AFPSCharacter : public ACharacter
