@@ -17,7 +17,12 @@ AFPSCharacter::AFPSCharacter()
 void AFPSCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+	FActorSpawnParameters SpawnParams;
 	
+	OnStart = CameraComponent->POV;
+	HealthComponent->OnHealthChanged.AddDynamic(this, &FPSCharacter::damageTaken);
+	
+	if (
 }
 
 
@@ -33,8 +38,14 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
-	PlayerInputComponent->BindAction("Fire")
-
+	PlayerInputComponent->BindAction("Fire", MK_PRESSED, this, &FPSCharacter::StartFiring)
+	PlayerInputComponent->BindAction("Fire", MK_RELEASED, this, &FPSCharacter::StopFiring)
+		
+	PlayerInputComponent->BindAxis("MoveVertical", this, &FPSCharacter::MoveVertical);
+	PlayerInputComponent->BindAxis("MoveHorizontal", this, &FPSCharacter::MoveHorizontal);
+	
+	PlayerInputComponent->BindAxis("LookX", this, &FPSCharacter::AddControllerPitchInput);
+	PlayerInputComponent->BindAxis("LookY", this, &FPSCharacter::AddControllerYawInput);
 }
 
 
