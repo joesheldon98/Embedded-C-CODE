@@ -6,7 +6,7 @@
 #include "EnemyAlpha.generated.h"
 
 class detectPawn;
-
+class USHealthComponent
 
 UCLASS()
 class MYFINALPROJECT_API AEnemyAlpha : public AActor
@@ -37,6 +37,9 @@ public:
 		void OncurrentState();
 
 	void setcurrentState(EAIState newState);
+	
+	UPROPERTY(VisibleDefaultsOnly, Category = "Components")
+	USHealthComponent* HealthComp;
 
 	UFUNCTION(BlueprintImplementableEvent, Category = "AI")
 		void OncurrentState(EAIState newState);
