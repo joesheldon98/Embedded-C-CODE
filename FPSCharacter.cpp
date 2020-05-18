@@ -17,7 +17,7 @@ AFPSCharacter::AFPSCharacter()
 	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
 	CameraComp->attachCamera(CameraComponent);
 	
-	CameraFOV = 200.0f;
+	CameraPOV = 200.0f;
 }
 
 // Called when the game starts or when spawned
