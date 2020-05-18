@@ -17,6 +17,8 @@ AEnemyAlpha::AEnemyAlpha()
 
 	CollisionBox->OnComponentBeginOverlap.AddDynamic(this, &ABoxActor::OnOverlapBegin);
 	CollisionBox->OnComponentEndOverlap.AddDynamic(this, &ABoxActor::OnOverlapEnd);
+	
+	outputDamage = 0.15f;    //15 hp damage output
 }
 
 // Called when the game starts or when spawned
@@ -68,6 +70,8 @@ void AEnemyAlpha::OnOverlapEnd(UPrimitiveComponent * OverlappedComp, AActor * Ot
 void AEnemyAlpha::onReceiveDamage()
 {
 	//emitted in editor
+	HealthComp = CreateDefaultSubobject<USHealthComponent>(TEXT("HealthComp"));
+	HealthComp->OnHealthChanged.AddDynamic(this, &EAISTATE::takeDamage);
 }
 
 void AEnemyAlpha::chasePlayer((const Location, float getPlayerLocation)
@@ -122,16 +126,36 @@ void AEnemyAlpha::AIhealth(float const value)
 void AEnemyAlpha::hitPlayer()
 {
 	onCurrentState = EAIState::Attack;
+	emitDamageOutput = true;
+	
+	if (this, &ABoxActor::OnOverlapBegin)
+	{
+		outputDamage++;
+	}
+	else
+		if(this, &ABoxActor::OnOverlapEnd)
+		   {
+			   emitDamageOutput = false;
+		   }
+	outputDamage = 0;
 }
 
 void AEnemyAlpha::freeRoam()
 {
-	OncurrentState = EAIState::Roam;   //perform idle state
+	OncurrentState = EAIState::Roam;   //perform roam state
+	AController* Controller = GetController();                  //random location
+	if (Controller)
+	{
+		FVector location = this->AController->SetComponentLocation();     
+		SetComponentLocation->rand() % 1000 + 500;       //set random roam location inside map perimeters
+	}
 }
 
 void AEnemyAlpha::changeSpeed()
 {
 	onCurrentState = EAIState::Attack;
 	//set in editor
+	emitVelocityChange = true;
+	movementChange = 100;
 
 }
