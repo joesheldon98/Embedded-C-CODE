@@ -10,7 +10,14 @@ AFPSCharacter::AFPSCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-
+	
+	HealthComp = CreateDefaultSubobject<USHealthComponent>(TEXT("HealthComp"));
+	float health = 100;
+	
+	CameraComp = CreateDefaultSubobject<UCameraComponent>(TEXT("CameraComp"));
+	CameraComp->attachCamera(CameraComponent);
+	
+	CameraFOV = 200.0f;
 }
 
 // Called when the game starts or when spawned
@@ -22,7 +29,16 @@ void AFPSCharacter::BeginPlay()
 	OnStart = CameraComponent->POV;
 	HealthComponent->OnHealthChanged.AddDynamic(this, &FPSCharacter::damageTaken);
 	
-	if (
+	if (this, &ABoxActor::OnOverlapBegin)
+	{
+		health--;
+	}
+	
+	if (health == 0)
+	{
+		DOREPLIFETIME(FPSCharacter, bDied);
+	}
+	return 0;
 }
 
 
